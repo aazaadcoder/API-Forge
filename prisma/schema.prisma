@@ -117,3 +117,4 @@ model WorkspaceMember{
 
   @@unique([userId, workspaceId])
 }
+

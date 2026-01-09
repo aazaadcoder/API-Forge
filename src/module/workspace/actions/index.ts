@@ -58,3 +58,21 @@ export const initializeWorkspace = async () => {
         }
     }
 }
+
+export async function getWorkspaces(){
+    const user = currentUser();
+
+    if(!user) throw Error("Unauthorized Access");
+
+    const workspaces = await db.workspace.findMany({
+        where:{
+            OR:[
+                {ownerId : user.id},
+                {members: {some:{userId : user.id}}}
+            ]
+        },
+        orderBy:{createdAt: "asc"}
+    });
+
+    return workspaces;
+}
