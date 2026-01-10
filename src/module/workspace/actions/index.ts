@@ -76,3 +76,24 @@ export async function getWorkspaces(){
 
     return workspaces;
 }
+
+export async function createWorkspace(name : string){
+    const user = await currentUser();
+
+    if(!user) throw Error("Unauthorized Access");
+
+    const workspace = await db.workspace.create({
+        data : {
+            name,
+            ownerId : user.id,
+            members:{
+                create:{
+                    userId : user.id,
+                    role : MEMBER_ROLE.ADMIN
+                }
+            }
+        }
+    })
+
+    return workspace
+}
